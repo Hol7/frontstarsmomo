@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontSarsMomo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontSarsMomo
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3601
+    ports:
+      - "3601:3601"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontSarsMomo.rule=Host(`stars.qashmo.com`)"
+      - "traefik.http.routers.frontSarsMomo.entrypoints=websecure"
+      - "traefik.http.routers.frontSarsMomo.tls=true"
+      - "traefik.http.routers.frontSarsMomo.tls.certresolver=myresolver"
+      - "traefik.http.services.frontSarsMomo.loadbalancer.server.port=3601"
+    networks:
+      - traefik
+    expose:
+      - "3601"
+
+networks:
+  traefik:
+    external: true
